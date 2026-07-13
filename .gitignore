@@ -1,0 +1,90 @@
+# Visual Studio
+.vs/
+.vscode/
+
+# Rider
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NuGet
+packages/
+*.nupkg
+.nuget/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Logs
+*.log
+
+# Database files
+*.mdf
+*.ldf
+
+# Entity Framework
+*.edmx.diagram
+
+# Publish output
+publish/
+Publish/
+
+# Azure
+*.PublishSettings
+
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# DotCover
+*.dotCover
+
+# BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Visual Studio cache
+*.cache
+*.vsidx
+
+# Local settings
+appsettings.Development.json
+
+# Coverage
+coverage/
+coverage.xml
+
+# Generated endpoint info
+**/EndpointInfo/
+
+# Akka.NET logs
+logs/
+akka-logs/
+
+# JetBrains Rider
+.idea/
+
+# Secrets
+secrets.json
+*.pfx
+*.snk
