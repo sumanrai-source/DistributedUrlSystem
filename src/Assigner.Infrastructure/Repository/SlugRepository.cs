@@ -59,5 +59,14 @@ namespace Assigner.Infrastructure.Repository
 
             return slug;
         }
+
+
+        public async Task<IEnumerable<Slugs>> GetAllSlugAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Slugs
+            .AsNoTracking()
+            .OrderBy(x => x.CreatedAt)
+            .ToListAsync(cancellationToken);
+        }
     }
 }

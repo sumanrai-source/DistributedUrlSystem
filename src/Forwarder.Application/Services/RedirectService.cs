@@ -1,11 +1,13 @@
 ﻿using Akka.Actor;
 using Forwarder.Application.Common;
 using Forwarder.Application.Forwarder.Queries.DestinationUrlBySlug;
+using Forwarder.Application.Forwarder.Queries.GetAvailableSlug;
 using Forwarder.Application.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using Shared.Contracts.Messages;
+using Shared.Contracts.SlugData;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -30,6 +32,35 @@ namespace Forwarder.Application.Services
             _logger = logger;
         }
 
+        public async Task<ApiResponse<List<GetAvailableSlugsResponse>>> GetAllSlugs(CancellationToken cancellationToken = default)
+        {
+            var response = await _actorProvider.SlugResolver.Ask<object>(
+                new GetAllSlug(),
+                TimeSpan.FromSeconds(5));
+
+            if (response is SlugResponseNotFound)
+            {
+                return ApiResponse<List<GetAvailableSlugsResponse>>.FailResponse(
+                    "No slugs found.");
+            }
+
+            if (response is not SlugResponseFound slugResponse)
+            {
+                return ApiResponse<List<GetAvailableSlugsResponse>>.FailResponse(
+                    "Invalid response from slug resolver.");
+            }
+
+            var result = slugResponse.Slugs
+                .Select(x => new GetAvailableSlugsResponse(
+                    x.Slug,
+                    x.Status))
+                .ToList();
+
+            return ApiResponse<List<GetAvailableSlugsResponse>>.SuccessResponse(
+                result,
+                "Slugs retrieved successfully.");
+        }
+
         public async Task<ApiResponse<DestinationUrlBySlugResponse>> GetDestinationUrlAsync(DestinationUrlBySlugDTOs destinationUrlBySlugDTOs,CancellationToken cancellationToken = default)
         {
             var slug = destinationUrlBySlugDTOs.slug;
@@ -51,6 +82,9 @@ namespace Forwarder.Application.Services
             var response = await _actorProvider.UrlResolver.Ask<object>(
                 new GetUrlBySlug(slug),
                 TimeSpan.FromSeconds(5));
+
+
+
 
             if (response is UrlNotFound)
             {

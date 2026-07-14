@@ -34,24 +34,6 @@ builder.Services
     .AddForwarderApplication()
     .AddForwarderInfrastructure();
 
-//builder.Services.AddAkka("ForwarderSystem", (akkaBuilder, provider) =>
-//{
-//    akkaBuilder.AddHocon(
-//        @"
-//        akka {
-//            actor {
-//                provider = remote
-//            }
-
-//            remote {
-//                dot-netty.tcp {
-//                    hostname = localhost
-//                    port = 4055
-//                }
-//            }
-//        }",
-//        HoconAddMode.Prepend);
-//});
 
 builder.Services.AddAkka("ForwarderSystem", (akkaBuilder, provider) =>
 {

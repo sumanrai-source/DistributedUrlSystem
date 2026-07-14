@@ -153,6 +153,17 @@ builder.Services.AddAkka("AssignerSystem", (akkaBuilder, provider) =>
 
         registry.Register<UrlResolverActor>(actor);
     });
+
+
+    akkaBuilder.WithActors((system, registry) =>
+    {
+        var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+        var actor = system.ActorOf(
+            Props.Create(() => new SlugResolverActor(scopeFactory)),
+            "slug-resolver");
+
+        registry.Register<SlugResolverActor>(actor);
+    });
 });
 
 

@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Portal.Application\Portal.Application\Portal.Application.csproj" />
-    <ProjectReference Include="..\Portal.Domain\Portal.Domain.csproj" />
     <ProjectReference Include="..\Portal.Infrastructure\Portal.Infrastructure.csproj" />
     <ProjectReference Include="..\Shared.Contracts\Shared.Contracts.csproj" />
   </ItemGroup>

@@ -17,6 +17,7 @@ namespace Portal.Infrastructure
             services.AddScoped<IUrlService, UrlService>();
 
             services.AddSingleton<IAkkaActorProvider, AkkaProvider>();
+            services.AddSingleton<ISlugInventoryServices, SlugInventoryServices>();
 
 
             services.AddHttpClient<IAssignerClientServices, AssignerClientServices>(client =>

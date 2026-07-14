@@ -8,5 +8,6 @@ namespace Forwarder.Application.Interfaces
     public interface IActorProvider
     {
         ActorSelection UrlResolver { get; }
+        ActorSelection SlugResolver { get; }
     }
 }

@@ -10,10 +10,15 @@ namespace Forwarder.Infrastructure.Messiging
     {
         public ActorSelection UrlResolver { get; }
 
+        public ActorSelection SlugResolver {  get; }
+
         public AkkaProvider(ActorSystem actorSystem)
         {
             UrlResolver = actorSystem.ActorSelection(
                 "akka.tcp://AssignerSystem@localhost:4054/user/url-resolver");
+
+            SlugResolver = actorSystem.ActorSelection(
+                "akka.tcp://AssignerSystem@localhost:4054/user/slug-resolver");
         }
     }
 }
