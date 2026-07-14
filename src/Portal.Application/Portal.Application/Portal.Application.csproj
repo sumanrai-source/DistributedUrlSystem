@@ -16,12 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Portal.Domain\Portal.Domain.csproj" />
+    <ProjectReference Include="..\..\Assigner.Domain\Assigner.Domain.csproj" />
     <ProjectReference Include="..\..\Shared.Contracts\Shared.Contracts.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Portal\Queries\" />
   </ItemGroup>
 
 </Project>

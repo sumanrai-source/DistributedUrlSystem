@@ -7,7 +7,6 @@
   <Project Path="../Forwarder.Application/Forwarder.Application.csproj" />
   <Project Path="../Forwarder.Infrastructure/Forwarder.Infrastructure.csproj" />
   <Project Path="../Portal.Api/Portal.Api.csproj" />
-  <Project Path="../Portal.Domain/Portal.Domain.csproj" />
   <Project Path="../Portal.Infrastructure/Portal.Infrastructure.csproj" />
   <Project Path="../Shared.Contracts/Shared.Contracts.csproj" Id="b474ca2b-c74f-4475-b069-d1b8efea0557" />
   <Project Path="Portal.Application/Portal.Application.csproj" />

@@ -31,7 +31,18 @@ public class AkkaHostedService : IHostedService
                     .WithRole("assigner")),
             "url-resolver");
 
+        var slugActor = _actorSystem.ActorOf(
+            ClusterSingletonManager.Props(
+                Props.Create(() =>
+                    new UrlResolverActor(_scopeFactory)),
+                PoisonPill.Instance,
+                ClusterSingletonManagerSettings
+                    .Create(_actorSystem)
+                    .WithRole("assigner")),
+            "slug-resolver");
+
         _registry.UrlResolver = actor;
+        _registry.SlugResolver = slugActor;
 
         return Task.CompletedTask;
     }

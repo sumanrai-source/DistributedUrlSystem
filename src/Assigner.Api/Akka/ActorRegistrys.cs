@@ -5,5 +5,6 @@ namespace Assigner.Api.Akka
     public class ActorRegistrys
     {
         public IActorRef? UrlResolver { get; set; }
+        public IActorRef? SlugResolver { get; set; }
     }
 }
