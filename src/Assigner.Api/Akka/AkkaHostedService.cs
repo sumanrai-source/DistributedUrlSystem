@@ -1,0 +1,43 @@
+﻿using Akka.Actor;
+using Akka.Cluster.Tools.Singleton;
+using Assigner.Api.Akka;
+using Assigner.Application.Actor;
+
+public class AkkaHostedService : IHostedService
+{
+    private readonly ActorSystem _actorSystem;
+    private readonly ActorRegistrys _registry;
+    private readonly IServiceScopeFactory _scopeFactory;
+
+    public AkkaHostedService(
+        ActorSystem actorSystem,
+        ActorRegistrys registry,
+        IServiceScopeFactory scopeFactory)
+    {
+        _actorSystem = actorSystem;
+        _registry = registry;
+        _scopeFactory = scopeFactory;
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        var actor = _actorSystem.ActorOf(
+            ClusterSingletonManager.Props(
+                Props.Create(() =>
+                    new UrlResolverActor(_scopeFactory)),
+                PoisonPill.Instance,
+                ClusterSingletonManagerSettings
+                    .Create(_actorSystem)
+                    .WithRole("assigner")),
+            "url-resolver");
+
+        _registry.UrlResolver = actor;
+
+        return Task.CompletedTask;
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        await _actorSystem.Terminate();
+    }
+}

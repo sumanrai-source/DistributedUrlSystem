@@ -3,6 +3,7 @@ using System;
 using Assigner.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Assigner.Infrastructure.Migrations
 {
     [DbContext(typeof(AssignerDbContext))]
-    partial class AssignerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260713121420_ad some tabl on Asigner")]
+    partial class adsometablonAsigner
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.9");

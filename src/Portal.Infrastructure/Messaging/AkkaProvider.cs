@@ -15,7 +15,7 @@ namespace Portal.Infrastructure.Messaging
         public AkkaProvider(ActorSystem actorSystem)
         {
             _urlCreatedListener = actorSystem.ActorSelection(
-                "akka.tcp://ForwarderSystem@localhost:4054/user/urlCreatedListener");
+                "akka.tcp://AssignerSystem@localhost:4054/user/urlCreatedListener");
 
             TestConnection(_urlCreatedListener);
         }

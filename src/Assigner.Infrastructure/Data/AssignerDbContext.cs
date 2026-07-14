@@ -9,6 +9,7 @@ namespace Assigner.Infrastructure.Data
     public class AssignerDbContext : DbContext
     {
         public DbSet<Slugs> Slugs { get; set; }
+        public DbSet<UrlMapping> UrlMappings { get; set; }
 
         public AssignerDbContext(DbContextOptions<AssignerDbContext> options)
              : base(options)

@@ -1,8 +1,6 @@
 ﻿using Forwarder.Application.Interfaces;
-using Forwarder.Application.IRepository;
 using Forwarder.Application.Services;
-using Forwarder.Infrastructure.Messaging;
-using Forwarder.Infrastructure.Repository;
+using Forwarder.Infrastructure.Messiging;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Forwarder.Infrastructure
@@ -13,11 +11,9 @@ namespace Forwarder.Infrastructure
         {
             services.AddMemoryCache();
             services.AddScoped<IRedirectService, RedirectService>();
-            services.AddScoped<IUrlRepository, UrlRepository>();
-            services.AddSingleton<AkkaProvider>();
-            services.AddSingleton<IAkkaActorProvider,AkkaProvider>();
 
-            //services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddSingleton<IActorProvider, AkkaProvider>();
+
 
             return services;
         }

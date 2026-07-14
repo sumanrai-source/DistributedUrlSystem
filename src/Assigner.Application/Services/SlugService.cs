@@ -43,6 +43,8 @@ namespace Assigner.Application.Services
                     slug: slug.Value
                     );
 
+
+
                 return ApiResponse<AssignSlugResponse>.SuccessResponse(
                     response,
                     "Slug assigned successfully."

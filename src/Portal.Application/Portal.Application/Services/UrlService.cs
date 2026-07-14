@@ -6,7 +6,6 @@ using Portal.Application.Interfaces;
 using Portal.Application.IRepository;
 using Portal.Application.options;
 using Portal.Application.Portal.Command.CreateShortUrl;
-using Portal.Domain.Entities;
 using Shared.Contracts.Events;
 using System;
 using System.Collections.Generic;
@@ -18,16 +17,14 @@ namespace Portal.Application.Services
     public class UrlService : IUrlService
     {
         private readonly IAssignerClientServices _assignerClient;
-        private readonly IUrlRepository _urlRepository;
         private readonly ILogger<UrlService> _logger;
         private readonly ForwarderOptions _forwarderOptions;
         private readonly IAkkaActorProvider _akkaActorProvider;
 
-        public UrlService(IAkkaActorProvider actorProvider,IAssignerClientServices assignerClientServices, IUrlRepository urlRepository, ILogger<UrlService> logger, IOptions<ForwarderOptions> forwarderOptions)
+        public UrlService(IAkkaActorProvider actorProvider,IAssignerClientServices assignerClientServices, ILogger<UrlService> logger, IOptions<ForwarderOptions> forwarderOptions)
         {
             _assignerClient = assignerClientServices;
             _akkaActorProvider = actorProvider;
-            _urlRepository = urlRepository;
             _logger = logger;
             _forwarderOptions = forwarderOptions.Value;
 
@@ -52,14 +49,6 @@ namespace Portal.Application.Services
             if (string.IsNullOrWhiteSpace(slug))
                 throw new InvalidOperationException("No available slug.");
 
-            var mapping = new UrlMapping
-            {
-                Slug = slug,
-                DestinationUrl = request.url,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            await _urlRepository.AddAsync(mapping, cancellationToken);
 
             var urlCreatedEvent = new UrlCreatedEvent(
                 slug,

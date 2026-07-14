@@ -4,7 +4,6 @@ using Portal.Application.IRepository;
 using Portal.Application.Services;
 using Portal.Infrastructure.Clients;
 using Portal.Infrastructure.Messaging;
-using Portal.Infrastructure.Repository;
 
 namespace Portal.Infrastructure
 {
@@ -12,11 +11,6 @@ namespace Portal.Infrastructure
     {
         public static IServiceCollection AddPortalInfrastructure(this IServiceCollection services)
         {
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-            services.AddScoped<IUrlRepository, UrlRepository>();
 
             services.AddScoped<IAssignerClientServices, AssignerClient>();
 

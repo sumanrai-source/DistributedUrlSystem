@@ -5,7 +5,6 @@
   <Project Path="../Assigner.Infrastructure/Assigner.Infrastructure.csproj" />
   <Project Path="../Forwarder.Api/Forwarder.Api.csproj" />
   <Project Path="../Forwarder.Application/Forwarder.Application.csproj" />
-  <Project Path="../Forwarder.Domain/Forwarder.Domain.csproj" />
   <Project Path="../Forwarder.Infrastructure/Forwarder.Infrastructure.csproj" />
   <Project Path="../Portal.Api/Portal.Api.csproj" />
   <Project Path="../Portal.Domain/Portal.Domain.csproj" />

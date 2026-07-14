@@ -29,6 +29,17 @@ namespace Assigner.Infrastructure.Repository
             await using var transaction =
              await _context.Database.BeginTransactionAsync(cancellationToken);
 
+
+            #region TestingApproach
+
+            var mapping = await _context.UrlMappings
+           .AsNoTracking()
+           .FirstOrDefaultAsync(
+               x => x.Slug == "c3f2db",
+               cancellationToken);
+
+            #endregion
+
             var slug = await _context.Slugs
                 .Where(x => x.Status == SlugStatus.Available)
                 .OrderBy(x => x.CreatedAt)
