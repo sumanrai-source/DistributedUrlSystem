@@ -1,9 +1,11 @@
-﻿using Forwarder.Application.Common;
+﻿using Akka.Actor;
+using Forwarder.Application.Common;
 using Forwarder.Application.Forwarder.Queries.DestinationUrlBySlug;
 using Forwarder.Application.Interfaces;
-using Forwarder.Application.IRepository;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
+using Shared.Contracts.Messages;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,16 +14,18 @@ namespace Forwarder.Application.Services
 {
     public class RedirectService : IRedirectService
     {
-        private readonly IUrlRepository _urlRepository;
         private readonly IMemoryCache _cache;
         private readonly ILogger<RedirectService> _logger;
+        private readonly IActorProvider _actorProvider;
+
+
 
         public RedirectService(
-        IUrlRepository urlRepository,
+        IActorProvider actorProvider,
         IMemoryCache cache,
         ILogger<RedirectService> logger)
         {
-            _urlRepository = urlRepository;
+            _actorProvider = actorProvider;
             _cache = cache;
             _logger = logger;
         }
@@ -44,28 +48,40 @@ namespace Forwarder.Application.Services
 
             _logger.LogInformation("Cache miss for slug {Slug}", slug);
 
-            var mapping = await _urlRepository.GetBySlugAsync(
-                slug,
-                cancellationToken);
+            var response = await _actorProvider.UrlResolver.Ask<object>(
+                new GetUrlBySlug(slug),
+                TimeSpan.FromSeconds(5));
 
-            if (mapping == null)
+            if (response is UrlNotFound)
             {
                 return ApiResponse<DestinationUrlBySlugResponse>.FailResponse(
                     "Slug not found.");
             }
 
-            _cache.Set(slug,mapping.Data.DestinationUrl,new MemoryCacheEntryOptions
+            if (response is not UrlFound urlFound)
+            {
+                _logger.LogError(
+                    "Unexpected response from UrlResolverActor.");
+
+                return ApiResponse<DestinationUrlBySlugResponse>.FailResponse(
+                    "Invalid response from URL resolver.");
+            }
+
+            _cache.Set(
+                slug,
+                urlFound.DestinationUrl,
+                new MemoryCacheEntryOptions
                 {
                     SlidingExpiration = TimeSpan.FromMinutes(30),
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(2)
                 });
 
+
             return ApiResponse<DestinationUrlBySlugResponse>.SuccessResponse(
-                new DestinationUrlBySlugResponse
-                (
-                    originalUrl : mapping.Data.DestinationUrl
-                ),
+                new DestinationUrlBySlugResponse(
+                    urlFound.DestinationUrl),
                 "URL found.");
+
         }
     }
 }

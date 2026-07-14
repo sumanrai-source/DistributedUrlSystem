@@ -1,4 +1,8 @@
+using Akka.Actor;
+using Akka.Hosting;
+using Assigner.Api.Akka;
 using Assigner.Application;
+using Assigner.Application.Actor;
 using Assigner.Infrastructure;
 using Assigner.Infrastructure.Data;
 using Assigner.Infrastructure.DataSeeder;
@@ -34,10 +38,124 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+//builder.Services.AddSingleton<ActorRegistrys>();
+//builder.Services.AddHostedService<AkkaHostedService>();
+
+
 builder.Services
     .AddAssignerApplication()
     .AddAssignerInfrastructure();
-    
+
+#region Actor create
+
+//builder.Services.AddSingleton(provider =>
+//{
+//    return ActorSystem.Create("AssignerSystem");
+//});
+
+#endregion
+
+
+//builder.Services.AddAkka("AssignerSystem", (akkaBuilder, provider) =>
+//{
+//    akkaBuilder.AddHocon(
+//        @"
+//        akka {
+//            loglevel = INFO
+//            stdout-loglevel = INFO
+
+//            actor {
+//                provider = remote
+//            }
+
+//            remote {
+//                dot-netty.tcp {
+//                    hostname = localhost
+//                    port = 4054
+//                }
+//            }
+//        }",
+//        HoconAddMode.Prepend);
+
+//    akkaBuilder.WithActors((system, registry) =>
+//    {
+//        var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+
+//        var actor = system.ActorOf(
+//            Props.Create(() => new UrlCreatedActor(scopeFactory)),
+//            "urlCreatedListener");
+
+//        var path = actor.Path.ToString();
+
+//        Console.WriteLine($"Created actor: {actor.Path}");
+
+//        registry.Register<UrlCreatedActor>(actor);
+//    });
+
+//    akkaBuilder.WithActors((system, registry) =>
+//    {
+//        var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+//        var actor = system.ActorOf(
+//            Props.Create(() => new UrlResolverActor(scopeFactory)),
+//            "urlResolver");
+
+//        registry.Register<UrlResolverActor>(actor);
+//    });
+//});
+
+builder.Services.AddAkka("AssignerSystem", (akkaBuilder, provider) =>
+{
+    akkaBuilder.AddHocon(
+        @"
+        akka {
+            actor {
+                provider = cluster
+            }
+
+            remote {
+                dot-netty.tcp {
+                    hostname = localhost
+                    port = 4054
+                }
+            }
+
+            cluster {
+                seed-nodes = [
+                    ""akka.tcp://AssignerSystem@localhost:4054""
+                ]
+
+                roles = [assigner]
+            }
+        }",
+        HoconAddMode.Prepend);
+
+    akkaBuilder.WithActors((system, registry) =>
+    {
+        var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+
+        var actor = system.ActorOf(
+            Props.Create(() => new UrlCreatedActor(scopeFactory)),
+            "urlCreatedListener");
+
+        var path = actor.Path.ToString();
+
+        Console.WriteLine($"Created actor: {actor.Path}");
+
+        registry.Register<UrlCreatedActor>(actor);
+    });
+
+    akkaBuilder.WithActors((system, registry) =>
+    {
+        var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+        var actor = system.ActorOf(
+            Props.Create(() => new UrlResolverActor(scopeFactory)),
+            "url-resolver");
+
+        registry.Register<UrlResolverActor>(actor);
+    });
+});
+
+
 
 
 

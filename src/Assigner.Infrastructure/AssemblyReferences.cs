@@ -13,7 +13,9 @@ namespace Assigner.Infrastructure
 
             services.AddScoped<ISlugService, SlugService>();
             services.AddScoped<ISlugRepository, SlugRepository>();
+            services.AddScoped<IUrlRepository, UrlRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             return services;

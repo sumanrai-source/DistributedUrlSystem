@@ -1,19 +1,13 @@
+
 using Akka.Actor;
-using Akka.Configuration;
 using Akka.Hosting;
 using Forwarder.Application;
-using Forwarder.Application.Actors;
-using Forwarder.Application.IRepository;
+using Forwarder.Application.Interfaces;
 using Forwarder.Infrastructure;
-using Forwarder.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Portal.Infrastructure.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ForwarderDbContext>(options =>
-    options.UseSqlite(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors(options =>
 {
@@ -40,64 +34,54 @@ builder.Services
     .AddForwarderApplication()
     .AddForwarderInfrastructure();
 
+//builder.Services.AddAkka("ForwarderSystem", (akkaBuilder, provider) =>
+//{
+//    akkaBuilder.AddHocon(
+//        @"
+//        akka {
+//            actor {
+//                provider = remote
+//            }
 
-
+//            remote {
+//                dot-netty.tcp {
+//                    hostname = localhost
+//                    port = 4055
+//                }
+//            }
+//        }",
+//        HoconAddMode.Prepend);
+//});
 
 builder.Services.AddAkka("ForwarderSystem", (akkaBuilder, provider) =>
 {
     akkaBuilder.AddHocon(
         @"
         akka {
-            loglevel = INFO
-            stdout-loglevel = INFO
-
             actor {
-                provider = remote
+                provider = cluster
             }
 
             remote {
                 dot-netty.tcp {
                     hostname = localhost
-                    port = 4054
+                    port = 4055
                 }
+            }
+
+            cluster {
+                seed-nodes = [
+                    ""akka.tcp://ForwarderSystem@localhost:4055""
+                ]
             }
         }",
         HoconAddMode.Prepend);
-
-    akkaBuilder.WithActors((system, registry) =>
-    {
-        var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-
-        var actor = system.ActorOf(
-            Props.Create(() => new UrlCreatedActor(scopeFactory)),
-            "urlCreatedListener");
-
-        var path = actor.Path.ToString();
-
-        Console.WriteLine($"Created actor: {actor.Path}");
-
-        registry.Register<UrlCreatedActor>(actor);
-    });
 });
 
 
 
 
 var app = builder.Build();
-
-app.Services.GetRequiredService<IAkkaActorProvider>();
-
-
-
-
-
-
-using var scope = app.Services.CreateScope();
-
-var context = scope.ServiceProvider
-    .GetRequiredService<ForwarderDbContext>();
-
-await context.Database.MigrateAsync();
 
 app.UseSwagger();
 app.UseSwaggerUI();

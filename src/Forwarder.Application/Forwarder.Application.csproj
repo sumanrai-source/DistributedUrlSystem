@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
     <Folder Include="Forwarder\Command\" />
   </ItemGroup>
 
@@ -22,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Forwarder.Domain\Forwarder.Domain.csproj" />
     <ProjectReference Include="..\Shared.Contracts\Shared.Contracts.csproj" />
   </ItemGroup>
 

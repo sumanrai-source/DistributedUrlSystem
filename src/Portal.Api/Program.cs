@@ -9,15 +9,10 @@ using Portal.Application.IRepository;
 using Portal.Application.options;
 using Portal.Infrastructure;
 using Portal.Infrastructure.Clients;
-using Portal.Infrastructure.Data;
 using Akka.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddDbContext<PortalDbContext>(options =>
-    options.UseSqlite(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors(options =>
 {
@@ -103,12 +98,6 @@ builder.Services.AddSingleton<IAkkaActorProvider, Portal.Infrastructure.Messagin
 
 var app = builder.Build();
 
-
-
-using var scope = app.Services.CreateScope();
-
-var context = scope.ServiceProvider
-    .GetRequiredService<PortalDbContext>();
 
 //await context.Database.MigrateAsync();
 
