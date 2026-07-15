@@ -1,0 +1,27 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #1976d2;
+  color: white;
+}
+
+td, th {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+button {
+  @include button(#1976d2);
+}
+
+button.delete {
+  @include button(#d32f2f);
+}

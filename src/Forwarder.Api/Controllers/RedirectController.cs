@@ -33,7 +33,8 @@ namespace Forwarder.Api.Controllers
             #region Switch
             return filteredResult switch
             {
-                { Success: true, Data: not null } => Redirect(filteredResult.Data.originalUrl),
+                //{ Success: true, Data: not null } => Redirect(filteredResult.Data.originalUrl),
+                { Success: true, Data: not null } => Ok(filteredResult.Data.originalUrl),
                 { Success: true, Data: null, Message: not null } => new JsonResult(new
                 {
                     Data = (object?)null,
