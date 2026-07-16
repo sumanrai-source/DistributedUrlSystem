@@ -1,4 +1,5 @@
 using Akka.Actor;
+using Akka.Cluster.Tools.Singleton;
 using Akka.Hosting;
 using Assigner.Api.Akka;
 using Assigner.Application;
@@ -7,6 +8,7 @@ using Assigner.Infrastructure;
 using Assigner.Infrastructure.Data;
 using Assigner.Infrastructure.DataSeeder;
 using Microsoft.EntityFrameworkCore;
+using Shared.Contracts.Constants;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,64 +48,8 @@ builder.Services
     .AddAssignerApplication()
     .AddAssignerInfrastructure();
 
-#region Actor create
 
-//builder.Services.AddSingleton(provider =>
-//{
-//    return ActorSystem.Create("AssignerSystem");
-//});
-
-#endregion
-
-
-//builder.Services.AddAkka("AssignerSystem", (akkaBuilder, provider) =>
-//{
-//    akkaBuilder.AddHocon(
-//        @"
-//        akka {
-//            loglevel = INFO
-//            stdout-loglevel = INFO
-
-//            actor {
-//                provider = remote
-//            }
-
-//            remote {
-//                dot-netty.tcp {
-//                    hostname = localhost
-//                    port = 4054
-//                }
-//            }
-//        }",
-//        HoconAddMode.Prepend);
-
-//    akkaBuilder.WithActors((system, registry) =>
-//    {
-//        var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-
-//        var actor = system.ActorOf(
-//            Props.Create(() => new UrlCreatedActor(scopeFactory)),
-//            "urlCreatedListener");
-
-//        var path = actor.Path.ToString();
-
-//        Console.WriteLine($"Created actor: {actor.Path}");
-
-//        registry.Register<UrlCreatedActor>(actor);
-//    });
-
-//    akkaBuilder.WithActors((system, registry) =>
-//    {
-//        var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-//        var actor = system.ActorOf(
-//            Props.Create(() => new UrlResolverActor(scopeFactory)),
-//            "urlResolver");
-
-//        registry.Register<UrlResolverActor>(actor);
-//    });
-//});
-
-builder.Services.AddAkka("AssignerSystem", (akkaBuilder, provider) =>
+builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
 {
     akkaBuilder.AddHocon(
         @"
@@ -121,7 +67,7 @@ builder.Services.AddAkka("AssignerSystem", (akkaBuilder, provider) =>
 
             cluster {
                 seed-nodes = [
-                    ""akka.tcp://AssignerSystem@localhost:4054""
+                    ""akka.tcp://ClusterSystem@localhost:4054""
                 ]
 
                 roles = [assigner]
@@ -147,23 +93,29 @@ builder.Services.AddAkka("AssignerSystem", (akkaBuilder, provider) =>
     akkaBuilder.WithActors((system, registry) =>
     {
         var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-        var actor = system.ActorOf(
-            Props.Create(() => new UrlResolverActor(scopeFactory)),
-            "url-resolver");
+        var actor = system.ActorOf(ClusterSingletonManager.Props(
+        Props.Create(() => new UrlResolverActor(scopeFactory)),
+        PoisonPill.Instance,
+        ClusterSingletonManagerSettings.Create(system)),
+        ActorNames.UrlResolverSingleton);
 
         registry.Register<UrlResolverActor>(actor);
     });
 
 
+
     akkaBuilder.WithActors((system, registry) =>
     {
         var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-        var actor = system.ActorOf(
-            Props.Create(() => new SlugResolverActor(scopeFactory)),
-            "slug-resolver");
+        var actor = system.ActorOf(ClusterSingletonManager.Props(
+        Props.Create(() => new SlugResolverActor(scopeFactory)),
+        PoisonPill.Instance,
+        ClusterSingletonManagerSettings.Create(system)),
+        ActorNames.SlugResolverSingleton);
 
         registry.Register<SlugResolverActor>(actor);
     });
+
 });
 
 

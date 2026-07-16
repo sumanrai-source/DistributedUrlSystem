@@ -18,6 +18,14 @@ namespace Assigner.Application.Actor
             _scopeFactory = scopeFactory;
             ReceiveAsync<GetUrlBySlug>(HandleLookupAsync);
 
+            //Receive<GetUrlBySlug>(msg =>
+            //{
+            //    Console.WriteLine($"Received GetUrlBySlug: {msg.Slug}");
+            //    Sender.Tell("OK");
+            //});
+
+
+
         }
 
         private async Task HandleLookupAsync(GetUrlBySlug message)

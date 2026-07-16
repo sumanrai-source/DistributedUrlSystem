@@ -8,6 +8,6 @@ namespace Portal.Application.Interfaces
 {
     public interface ISlugInventoryServices
     {
-        Task<ApiResponse<IEnumerable<GetAvailableSlugsResponse>>> GetAllSlugAsync();
+        Task<ApiResponse<List<GetAvailableSlugsResponse>>> GetAllSlugAsync();
     }
 }

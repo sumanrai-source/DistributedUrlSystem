@@ -84,6 +84,10 @@ namespace Forwarder.Application.Services
                 TimeSpan.FromSeconds(5));
 
 
+            var slugResponse = await _actorProvider.SlugResolver.Ask<object>(
+                new GetAllSlug(),
+                TimeSpan.FromSeconds(5));
+
 
 
             if (response is UrlNotFound)

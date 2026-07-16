@@ -94,6 +94,40 @@ builder.Services.
     .AddPortalInfrastructure();
 
 
+
+
+#region Cluster Configuration
+builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
+{
+    akkaBuilder.AddHocon(
+        @"
+        akka {
+            actor {
+                provider = cluster
+            }
+
+            remote {
+                dot-netty.tcp {
+                    hostname = localhost
+                    port = 4055
+                }
+            }
+
+            cluster {
+                seed-nodes = [
+                    ""akka.tcp://ClusterSystem@localhost:4054""
+                ]
+            }
+        }",
+        HoconAddMode.Prepend);
+
+
+});
+
+#endregion
+
+
+
 builder.Services.AddSingleton<IAkkaActorProvider, Portal.Infrastructure.Messaging.AkkaProvider>();
 
 var app = builder.Build();

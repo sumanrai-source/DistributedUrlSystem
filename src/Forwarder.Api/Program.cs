@@ -35,7 +35,7 @@ builder.Services
     .AddForwarderInfrastructure();
 
 
-builder.Services.AddAkka("ForwarderSystem", (akkaBuilder, provider) =>
+builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
 {
     akkaBuilder.AddHocon(
         @"
@@ -53,11 +53,13 @@ builder.Services.AddAkka("ForwarderSystem", (akkaBuilder, provider) =>
 
             cluster {
                 seed-nodes = [
-                    ""akka.tcp://ForwarderSystem@localhost:4055""
+                    ""akka.tcp://ClusterSystem@localhost:4054""
                 ]
             }
         }",
         HoconAddMode.Prepend);
+
+
 });
 
 
