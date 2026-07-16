@@ -1,24 +1,27 @@
 ﻿using Akka.Actor;
+using Akka.Cluster.Tools.Singleton;
 using Forwarder.Application.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Forwarder.Infrastructure.Messiging
 {
     public class AkkaProvider : IActorProvider
     {
-        public ActorSelection UrlResolver { get; }
-
-        public ActorSelection SlugResolver {  get; }
+        public IActorRef UrlResolver { get; }
+        public IActorRef SlugResolver { get; }
 
         public AkkaProvider(ActorSystem actorSystem)
         {
-            UrlResolver = actorSystem.ActorSelection(
-                "akka.tcp://AssignerSystem@localhost:4054/user/url-resolver");
+            UrlResolver = actorSystem.ActorOf(
+                ClusterSingletonProxy.Props(
+                    "/user/url-resolver-singleton",
+                    ClusterSingletonProxySettings.Create(actorSystem)),
+                "url-resolver-proxy");
 
-            SlugResolver = actorSystem.ActorSelection(
-                "akka.tcp://AssignerSystem@localhost:4054/user/slug-resolver");
+            SlugResolver = actorSystem.ActorOf(
+                ClusterSingletonProxy.Props(
+                    "/user/slug-resolver-singleton",
+                    ClusterSingletonProxySettings.Create(actorSystem)),
+                "slug-resolver-proxy");
         }
     }
 }

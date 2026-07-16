@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Forwarder.Application.Interfaces
+namespace Portal.Application.Interfaces
 {
     public interface IActorProvider
     {
