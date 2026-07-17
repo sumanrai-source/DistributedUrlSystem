@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Portal.Application.Interfaces;
-using Portal.Application.IRepository;
-using Portal.Application.Services;
 using Portal.Infrastructure.Clients;
 using Portal.Infrastructure.Messaging;
 

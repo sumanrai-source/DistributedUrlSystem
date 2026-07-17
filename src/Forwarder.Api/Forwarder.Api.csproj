@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Forwarder.Application\Forwarder.Application.csproj" />
-    <ProjectReference Include="..\Forwarder.Domain\Forwarder.Domain.csproj" />
   </ItemGroup>
 
 </Project>
