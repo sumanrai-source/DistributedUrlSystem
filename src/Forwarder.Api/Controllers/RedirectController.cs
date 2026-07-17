@@ -1,11 +1,10 @@
 ﻿using Forwarder.Api.BaseControllers;
-using Forwarder.Application.Forwarder.Queries.DestinationUrlBySlug;
-using Forwarder.Application.Forwarder.Queries.GetAvailableSlug;
+using Forwarder.Application.forwarder.Queries.DestinationUrlBySlug;
 using Forwarder.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Portal.Application.Portal.Command.CreateShortUrl;
+
 
 namespace Forwarder.Api.Controllers
 {
@@ -50,32 +49,6 @@ namespace Forwarder.Api.Controllers
         }
 
 
-
-
-        [HttpGet("AllSlug")]
-        public async Task<IActionResult> AllSlug()
-        {
-
-            var query = new GetAvailableSlugsQuery();
-            var filteredResult = await _mediator.Send(query);
-
-            #region Switch
-            return filteredResult switch
-            {
-                { Success: true, Data: not null } => Ok(filteredResult.Data),
-                { Success: true, Data: null, Message: not null } => new JsonResult(new
-                {
-                    Data = (object?)null,
-                    StatusCode = StatusCodes.Status200OK,
-                    Message = filteredResult.Message
-                }),
-                { Success: false, Errors: not null } => HandlerFailure(filteredResult.Errors),
-                _ => BadRequest("Invalid Fields")
-            };
-
-            #endregion
-
-        }
 
     }
 }

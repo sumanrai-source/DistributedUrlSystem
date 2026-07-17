@@ -1,8 +1,8 @@
 ﻿using Akka.Actor;
 using Forwarder.Application.Common;
-using Forwarder.Application.Forwarder.Queries.DestinationUrlBySlug;
-using Forwarder.Application.Forwarder.Queries.GetAvailableSlug;
+using Forwarder.Application.forwarder.Queries.DestinationUrlBySlug;
 using Forwarder.Application.Interfaces;
+using Forwarder.Application.Messaging;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
@@ -18,50 +18,21 @@ namespace Forwarder.Application.Services
     {
         private readonly IMemoryCache _cache;
         private readonly ILogger<RedirectService> _logger;
-        private readonly IActorProvider _actorProvider;
+        private readonly IAkkaProvider _akkaProvider;
 
 
 
         public RedirectService(
-        IActorProvider actorProvider,
+        IAkkaProvider akkaProvider,
         IMemoryCache cache,
         ILogger<RedirectService> logger)
         {
-            _actorProvider = actorProvider;
+            _akkaProvider = akkaProvider;
             _cache = cache;
             _logger = logger;
         }
 
-        public async Task<ApiResponse<List<GetAvailableSlugsResponse>>> GetAllSlugs(CancellationToken cancellationToken = default)
-        {
-            var response = await _actorProvider.SlugResolver.Ask<object>(
-                new GetAllSlug(),
-                TimeSpan.FromSeconds(5));
-
-            if (response is SlugResponseNotFound)
-            {
-                return ApiResponse<List<GetAvailableSlugsResponse>>.FailResponse(
-                    "No slugs found.");
-            }
-
-            if (response is not SlugResponseFound slugResponse)
-            {
-                return ApiResponse<List<GetAvailableSlugsResponse>>.FailResponse(
-                    "Invalid response from slug resolver.");
-            }
-
-            var result = slugResponse.Slugs
-                .Select(x => new GetAvailableSlugsResponse(
-                    x.Slug,
-                    x.Status))
-                .ToList();
-
-            return ApiResponse<List<GetAvailableSlugsResponse>>.SuccessResponse(
-                result,
-                "Slugs retrieved successfully.");
-        }
-
-        public async Task<ApiResponse<DestinationUrlBySlugResponse>> GetDestinationUrlAsync(DestinationUrlBySlugDTOs destinationUrlBySlugDTOs,CancellationToken cancellationToken = default)
+        public async Task<ApiResponse<DestinationUrlBySlugResponse>> GetDestinationUrlAsync(DestinationUrlBySlugDTOs destinationUrlBySlugDTOs, CancellationToken cancellationToken = default)
         {
             var slug = destinationUrlBySlugDTOs.slug;
 
@@ -79,13 +50,8 @@ namespace Forwarder.Application.Services
 
             _logger.LogInformation("Cache miss for slug {Slug}", slug);
 
-            var response = await _actorProvider.UrlResolver.Ask<object>(
+            var response = await _akkaProvider.UrlResolver.Ask<object>(
                 new GetUrlBySlug(slug),
-                TimeSpan.FromSeconds(5));
-
-
-            var slugResponse = await _actorProvider.SlugResolver.Ask<object>(
-                new GetAllSlug(),
                 TimeSpan.FromSeconds(5));
 
 

@@ -3,7 +3,6 @@ using Akka.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Portal.Application;
-using Portal.Application.Actors;
 using Portal.Application.Interfaces;
 using Portal.Application.IRepository;
 using Portal.Application.options;
@@ -66,33 +65,10 @@ builder.Services
         client.Timeout = TimeSpan.FromSeconds(10);
     });
 
-builder.Services.AddAkka("PortalSystem", (akkaBuilder, provider) =>
-{
-    akkaBuilder.AddHocon(
-        @"
-        akka {
-            actor {
-                provider = remote
-            }
-
-            remote {
-                dot-netty.tcp {
-                    hostname = localhost
-                    port = 0
-                }
-            }
-        }",
-        HoconAddMode.Prepend);
-});
-
-
-
-
 
 builder.Services.
     AddPortalApplication()
     .AddPortalInfrastructure();
-
 
 
 
@@ -127,13 +103,9 @@ builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
 #endregion
 
 
-
-builder.Services.AddSingleton<IAkkaActorProvider, Portal.Infrastructure.Messaging.AkkaProvider>();
-
 var app = builder.Build();
 
 
-//await context.Database.MigrateAsync();
 
 app.UseSwagger();
 app.UseSwaggerUI();

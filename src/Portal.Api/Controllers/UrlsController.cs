@@ -6,6 +6,7 @@ using Portal.Application.DTOs;
 using Portal.Application.Interfaces;
 using Portal.Application.Portal.Command.CreateShortUrl;
 using Portal.Application.Portal.Command.CreateShortUrl.RequestCommandMapper;
+using Portal.Application.Portal.Queries.GetAvailableSlug;
 
 namespace Portal.Api.Controllers
 {
@@ -39,6 +40,33 @@ namespace Portal.Api.Controllers
                     Message = addResult.Message
                 }),
                 { Success: false, Errors: not null } => HandlerFailure(addResult.Errors),
+                _ => BadRequest("Invalid Fields")
+            };
+
+            #endregion
+
+        }
+
+
+
+        [HttpGet("AllSlug")]
+        public async Task<IActionResult> AllSlug()
+        {
+
+            var query = new GetAvailableSlugsQuery();
+            var filteredResult = await _mediator.Send(query);
+
+            #region Switch
+            return filteredResult switch
+            {
+                { Success: true, Data: not null } => Ok(filteredResult.Data),
+                { Success: true, Data: null, Message: not null } => new JsonResult(new
+                {
+                    Data = (object?)null,
+                    StatusCode = StatusCodes.Status200OK,
+                    Message = filteredResult.Message
+                }),
+                { Success: false, Errors: not null } => HandlerFailure(filteredResult.Errors),
                 _ => BadRequest("Invalid Fields")
             };
 

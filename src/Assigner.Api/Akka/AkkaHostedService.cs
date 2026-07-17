@@ -21,6 +21,18 @@ public class AkkaHostedService : IHostedService
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+
+        var urlCreate = _actorSystem.ActorOf(
+            ClusterSingletonManager.Props(
+                Props.Create(() =>
+                    new UrlCreatedActor(_scopeFactory)),
+                PoisonPill.Instance,
+                ClusterSingletonManagerSettings
+                    .Create(_actorSystem)
+                    .WithRole("assigner")),
+            "url-create");
+
+
         var actor = _actorSystem.ActorOf(
             ClusterSingletonManager.Props(
                 Props.Create(() =>
@@ -41,6 +53,7 @@ public class AkkaHostedService : IHostedService
                     .WithRole("assigner")),
             "slug-resolver");
 
+        _registry.UrlCreate = urlCreate;
         _registry.UrlResolver = actor;
         _registry.SlugResolver = slugActor;
 

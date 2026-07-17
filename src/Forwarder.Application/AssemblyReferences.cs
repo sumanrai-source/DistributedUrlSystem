@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Forwarder.Application.Interfaces;
+using Forwarder.Application.Messaging;
+using Forwarder.Application.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Forwarder.Application
 {
@@ -8,6 +11,10 @@ namespace Forwarder.Application
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AssemblyReferences).Assembly));
             services.AddAutoMapper(cfg => cfg.AddMaps(typeof(AssemblyReferences).Assembly));
+
+            
+            services.AddSingleton<IAkkaProvider, AkkaProvider>();
+            services.AddSingleton<IRedirectService, RedirectService>();
             return services;
         }
 
