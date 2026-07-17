@@ -1,0 +1,12 @@
+<Solution>
+  <Project Path="Assigner.Api/Assigner.Api.csproj" />
+  <Project Path="Assigner.Application/Assigner.Application.csproj" />
+  <Project Path="Assigner.Domain/Assigner.Domain.csproj" />
+  <Project Path="Assigner.Infrastructure/Assigner.Infrastructure.csproj" />
+  <Project Path="Forwarder.Api/Forwarder.Api.csproj" />
+  <Project Path="Forwarder.Application/Forwarder.Application.csproj" />
+  <Project Path="Forwarder.Domain/Forwarder.Domain.csproj" />
+  <Project Path="Portal.Api/Portal.Api.csproj" />
+  <Project Path="Portal.Infrastructure/Portal.Infrastructure.csproj" />
+  <Project Path="Shared.Contracts/Shared.Contracts.csproj" />
+</Solution>
