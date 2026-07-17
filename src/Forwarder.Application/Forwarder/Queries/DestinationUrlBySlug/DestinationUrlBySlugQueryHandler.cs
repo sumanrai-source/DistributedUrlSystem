@@ -1,5 +1,4 @@
-﻿using Akka.Util;
-using AutoMapper;
+﻿using AutoMapper;
 using Forwarder.Application.Common;
 using Forwarder.Application.Interfaces;
 using MediatR;
@@ -7,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Forwarder.Application.Forwarder.Queries.DestinationUrlBySlug
+namespace Forwarder.Application.forwarder.Queries.DestinationUrlBySlug
 {
     public class DestinationUrlBySlugQueryHandler : IRequestHandler<DestinationUrlBySlugQuery, ApiResponse<DestinationUrlBySlugResponse>>
     {

@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Portal.Application.Interfaces
+namespace Forwarder.Application.Interfaces
 {
-    public interface IActorProvider
+    public interface IAkkaProvider
     {
         IActorRef UrlResolver { get; }
-        IActorRef SlugResolver { get; }
     }
 }

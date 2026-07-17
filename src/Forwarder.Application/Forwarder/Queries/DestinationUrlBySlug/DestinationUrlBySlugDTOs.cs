@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Forwarder.Application.Forwarder.Queries.DestinationUrlBySlug
+namespace Forwarder.Application.forwarder.Queries.DestinationUrlBySlug
 {
     public record DestinationUrlBySlugDTOs
     (
         string slug
         );
-    
 }

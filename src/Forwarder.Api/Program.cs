@@ -1,10 +1,6 @@
 
-using Akka.Actor;
 using Akka.Hosting;
 using Forwarder.Application;
-using Forwarder.Application.Interfaces;
-using Forwarder.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +26,12 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddMemoryCache();
+
 builder.Services
-    .AddForwarderApplication()
-    .AddForwarderInfrastructure();
+    .AddForwarderApplication();
 
-
+#region Cluster Configuration
 builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
 {
     akkaBuilder.AddHocon(
@@ -47,7 +44,7 @@ builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
             remote {
                 dot-netty.tcp {
                     hostname = localhost
-                    port = 4055
+                    port = 4056
                 }
             }
 
@@ -61,6 +58,10 @@ builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
 
 
 });
+
+#endregion
+
+
 
 
 

@@ -8,6 +8,10 @@ namespace Portal.Application.IRepository
 {
     public interface IAkkaActorProvider
     {
+        IActorRef UrlCreated { get; }
+        //IActorRef UrlResolver { get; }
+        IActorRef SlugResolver { get; }
+
         void Publish(UrlCreatedEvent createdEvents);
     }
 }

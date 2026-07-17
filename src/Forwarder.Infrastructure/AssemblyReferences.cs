@@ -1,6 +1,4 @@
-﻿using Forwarder.Application.Interfaces;
-using Forwarder.Application.Services;
-using Forwarder.Infrastructure.Messiging;
+﻿
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Forwarder.Infrastructure
@@ -10,9 +8,9 @@ namespace Forwarder.Infrastructure
         public static IServiceCollection AddForwarderInfrastructure(this IServiceCollection services)
         {
             services.AddMemoryCache();
-            services.AddScoped<IRedirectService, RedirectService>();
+            //services.AddScoped<IRedirectService, RedirectService>();
 
-            services.AddSingleton<IActorProvider, AkkaProvider>();
+            //services.AddSingleton<IActorProvider, AkkaProvider>();
 
 
             return services;

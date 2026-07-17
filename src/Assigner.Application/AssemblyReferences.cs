@@ -7,7 +7,6 @@ namespace Assigner.Application
         public static IServiceCollection AddAssignerApplication(this IServiceCollection services)
         {
             //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            //services.AddScoped<IUserServices, UserService>();
             return services;
         }
 

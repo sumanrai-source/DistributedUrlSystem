@@ -1,5 +1,7 @@
-﻿using Portal.Application.Common;
+﻿using Akka.Actor;
+using Portal.Application.Common;
 using Portal.Application.Interfaces;
+using Portal.Application.IRepository;
 using Portal.Application.Portal.Queries.GetAvailableSlug;
 using Shared.Contracts.SlugData;
 using System;
@@ -11,9 +13,9 @@ namespace Portal.Application.Services
     public class SlugInventoryServices : ISlugInventoryServices
     {
 
-        private readonly IActorProvider _actorProvider;
+        private readonly IAkkaActorProvider _actorProvider;
 
-        public SlugInventoryServices(IActorProvider actorProvider,)
+        public SlugInventoryServices(IAkkaActorProvider actorProvider)
         {
             _actorProvider = actorProvider;
 

@@ -1,6 +1,5 @@
 ﻿using Forwarder.Application.Common;
-using Forwarder.Application.Forwarder.Queries.DestinationUrlBySlug;
-using Forwarder.Application.Forwarder.Queries.GetAvailableSlug;
+using Forwarder.Application.forwarder.Queries.DestinationUrlBySlug;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +12,5 @@ namespace Forwarder.Application.Interfaces
             DestinationUrlBySlugDTOs destinationUrlBySlugDTOs,
             CancellationToken cancellationToken = default);
 
-        Task<ApiResponse<List<GetAvailableSlugsResponse>>> GetAllSlugs(
-            CancellationToken cancellationToken = default);
     }
 }

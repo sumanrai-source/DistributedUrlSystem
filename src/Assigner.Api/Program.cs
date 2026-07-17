@@ -78,28 +78,21 @@ builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
     akkaBuilder.WithActors((system, registry) =>
     {
         var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-
-        var actor = system.ActorOf(
-            Props.Create(() => new UrlCreatedActor(scopeFactory)),
-            "urlCreatedListener");
-
-        var path = actor.Path.ToString();
-
-        Console.WriteLine($"Created actor: {actor.Path}");
-
-        registry.Register<UrlCreatedActor>(actor);
+        system.ActorOf(ClusterSingletonManager.Props(
+        Props.Create(() => new UrlCreatedActor(scopeFactory)),
+        PoisonPill.Instance,
+        ClusterSingletonManagerSettings.Create(system)),
+        ActorNames.UrlCreatedSingleton);
     });
 
     akkaBuilder.WithActors((system, registry) =>
     {
         var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-        var actor = system.ActorOf(ClusterSingletonManager.Props(
+        system.ActorOf(ClusterSingletonManager.Props(
         Props.Create(() => new UrlResolverActor(scopeFactory)),
         PoisonPill.Instance,
         ClusterSingletonManagerSettings.Create(system)),
         ActorNames.UrlResolverSingleton);
-
-        registry.Register<UrlResolverActor>(actor);
     });
 
 
@@ -107,30 +100,80 @@ builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
     akkaBuilder.WithActors((system, registry) =>
     {
         var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-        var actor = system.ActorOf(ClusterSingletonManager.Props(
+        system.ActorOf(ClusterSingletonManager.Props(
         Props.Create(() => new SlugResolverActor(scopeFactory)),
         PoisonPill.Instance,
         ClusterSingletonManagerSettings.Create(system)),
         ActorNames.SlugResolverSingleton);
-
-        registry.Register<SlugResolverActor>(actor);
     });
 
+
+    //akkaBuilder.WithActors((system, registry) =>
+    //{
+    //    var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+    //    var actor = system.ActorOf(ClusterSingletonManager.Props(
+    //    Props.Create(() => new UrlCreatedActor(scopeFactory)),
+    //    PoisonPill.Instance,
+    //    ClusterSingletonManagerSettings.Create(system)),
+    //    ActorNames.UrlCreatedSingleton);
+
+    //    registry.Register<UrlCreatedActor>(actor);
+    //});
+
+    //akkaBuilder.WithActors((system, registry) =>
+    //{
+    //    var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+    //    var actor = system.ActorOf(ClusterSingletonManager.Props(
+    //    Props.Create(() => new UrlResolverActor(scopeFactory)),
+    //    PoisonPill.Instance,
+    //    ClusterSingletonManagerSettings.Create(system)),
+    //    ActorNames.UrlResolverSingleton);
+
+    //    registry.Register<UrlResolverActor>(actor);
+    //});
+
+
+
+    //akkaBuilder.WithActors((system, registry) =>
+    //{
+    //    var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
+    //    var actor = system.ActorOf(ClusterSingletonManager.Props(
+    //    Props.Create(() => new SlugResolverActor(scopeFactory)),
+    //    PoisonPill.Instance,
+    //    ClusterSingletonManagerSettings.Create(system)),
+    //    ActorNames.SlugResolverSingleton);
+
+    //    registry.Register<SlugResolverActor>(actor);
+    //});
+
+});
+
+var app = builder.Build();
+
+app.Lifetime.ApplicationStarted.Register(async () =>
+{
+    using var scope = app.Services.CreateScope();
+
+    var context = scope.ServiceProvider
+        .GetRequiredService<AssignerDbContext>();
+
+    await context.Database.MigrateAsync();
+    await SlugSeeder.SeedAsync(context);
 });
 
 
 
 
 
-var app = builder.Build();
+//var app = builder.Build();
 
-using var scope = app.Services.CreateScope();
+//using var scope = app.Services.CreateScope();
 
-var context = scope.ServiceProvider
-    .GetRequiredService<AssignerDbContext>();
+//var context = scope.ServiceProvider
+//    .GetRequiredService<AssignerDbContext>();
 
-await context.Database.MigrateAsync();
-await SlugSeeder.SeedAsync(context);
+//await context.Database.MigrateAsync();
+//await SlugSeeder.SeedAsync(context);
 
 
 

@@ -11,7 +11,7 @@ namespace Portal.Infrastructure
     {
         public static IServiceCollection AddPortalInfrastructure(this IServiceCollection services)
         {
-
+            services.AddMemoryCache();
             services.AddScoped<IAssignerClientServices, AssignerClient>();
 
             services.AddScoped<IUrlService, UrlService>();
@@ -19,10 +19,9 @@ namespace Portal.Infrastructure
             services.AddSingleton<IAkkaActorProvider, AkkaProvider>();
             services.AddSingleton<ISlugInventoryServices, SlugInventoryServices>();
 
-
             services.AddHttpClient<IAssignerClientServices, AssignerClientServices>(client =>
             {
-                client.BaseAddress = new Uri("http://localhost:5137/");
+                client.BaseAddress = new Uri("http://localhost:5137"); // or the correct URL
             });
 
             return services;

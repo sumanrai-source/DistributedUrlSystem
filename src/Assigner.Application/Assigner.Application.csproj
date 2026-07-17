@@ -17,9 +17,4 @@
     <ProjectReference Include="..\Shared.Contracts\Shared.Contracts.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Assigner\Command\" />
-    <Folder Include="Assigner\Queries\" />
-  </ItemGroup>
-
 </Project>
