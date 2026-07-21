@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Portal.Application.Interfaces;
+using Portal.Application.Portal.Command.CreateShortUrl;
+using Portal.Application.Portal.Command.CreateShortUrl.RequestCommandMapper;
+using Portal.Application.Portal.Queries.GetAvailableSlug;
 using Portal.Server.BaseControllers;
 
 namespace Portal.Server.Controllers
@@ -16,7 +21,7 @@ namespace Portal.Server.Controllers
             _mediator = mediator;
             _urlService = urlService;
         }
-        [HttpPost()]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] CreateShortUrlRequest request, CancellationToken cancellationToken)
         {
 

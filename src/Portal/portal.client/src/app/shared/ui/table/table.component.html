@@ -1,0 +1,25 @@
+<table>
+  <thead>
+    <tr>
+      <th *ngFor="let col of columns">
+        {{ col }}
+      </th>
+      <th *ngIf="actionTemplate">Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let item of data">
+      <td *ngFor="let col of columns">
+        {{ item[col.toLowerCase()] }}
+      </td>
+
+      <!-- ✅ THIS IS THE IMPORTANT PART -->
+      <td *ngIf="actionTemplate">
+        <ng-container
+          *ngTemplateOutlet="actionTemplate; context: { $implicit: item }">
+        </ng-container>
+      </td>
+    </tr>
+  </tbody>
+</table>
