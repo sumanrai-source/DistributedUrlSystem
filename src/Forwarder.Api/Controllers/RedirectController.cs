@@ -22,7 +22,7 @@ namespace Forwarder.Api.Controllers
         }
 
 
-        [HttpGet("DestinationUrl")]
+        [HttpGet("DestinationUrl/{slug}")]
         public async Task<IActionResult> DestinationUrl([FromQuery] DestinationUrlBySlugDTOs destinationUrlBySlugDTOs, CancellationToken cancellationToken)
         {
 

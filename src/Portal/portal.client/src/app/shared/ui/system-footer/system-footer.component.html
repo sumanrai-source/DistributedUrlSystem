@@ -1,0 +1,39 @@
+<div class="sidebar-shell" [class.open]="profileOpen">
+  <button class="sidebar-toggle" mat-fab mini color="primary" aria-label="Open sidebar" (click)="toggleProfile()">
+    <mat-icon>{{ profileOpen ? 'chevron_left' : 'menu' }}</mat-icon>
+  </button>
+
+  <aside class="sidebar" [attr.aria-hidden]="!profileOpen">
+    <div class="sidebar-header">
+      <div class="profile-avatar company-avatar">
+        <mat-icon>business</mat-icon>
+      </div>
+      <div class="profile-meta company-meta">
+        <div class="profile-name">Infinite Nepal</div>
+        <div class="profile-roles">Hatisar, Kathmandu</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <button mat-button *ngFor="let item of navItems" [routerLink]="item.route" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [attr.aria-label]="item.label">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-actions">
+      <button mat-button *ngFor="let action of actions" class="panel-action" [ngClass]="{ danger: action.danger }" (click)="onAction(action.action)">
+        <mat-icon>{{ action.icon }}</mat-icon>
+        <span>{{ action.label }}</span>
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <mat-slide-toggle [checked]="darkMode" (change)="toggleTheme()">
+        Dark mode
+      </mat-slide-toggle>
+    </div>
+  </aside>
+
+  <div class="sidebar-backdrop" *ngIf="profileOpen" (click)="toggleProfile()" aria-label="Close sidebar"></div>
+</div>

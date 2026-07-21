@@ -1,0 +1,28 @@
+<div class="content-shell" [class.gate-page]="isGateRoute">
+  <div class="profile-widget" *ngIf="isGateRoute">
+    <div class="profile-widget__top">
+      <button class="profile-badge" type="button" aria-label="Open profile menu" (click)="toggleProfileMenu()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
+        </svg>
+      </button>
+      <div>
+        <div class="profile-widget__name">Suman Rai</div>
+        <div class="profile-widget__roles">Administrator • Role Manager</div>
+      </div>
+    </div>
+
+    <div class="profile-dropdown" *ngIf="profileMenuOpen">
+      <button class="profile-dropdown__item" type="button">View profile</button>
+      <button class="profile-dropdown__item" type="button" (click)="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="content-panel" [class.gate-panel]="isGateRoute">
+    <main class="page-main">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+<app-system-footer></app-system-footer>
