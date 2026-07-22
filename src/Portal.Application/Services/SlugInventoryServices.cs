@@ -20,6 +20,7 @@ namespace Portal.Application.Services
             _actorProvider = actorProvider;
 
         }
+
         public async Task<ApiResponse<List<GetAvailableSlugsResponse>>> GetAllSlugAsync()
         {
             var response = await _actorProvider.SlugResolver.Ask<object>(

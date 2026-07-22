@@ -1,6 +1,8 @@
 export interface UrlMapping {
   id: string;
-  url?: string;
+  slug?: string;
+  destinationUrl:string;
+  createdAt: Date;
 }
 
 export interface ApiResponse<T> {

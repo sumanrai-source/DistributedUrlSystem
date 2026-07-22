@@ -11,11 +11,12 @@ namespace Portal.Infrastructure.Messaging
     public class AkkaProvider : IAkkaActorProvider
     {
 
-        //public IActorRef UrlResolver { get; }
+        public IActorRef UrlMapping { get; }
 
         public IActorRef SlugResolver { get; }
 
         public IActorRef UrlCreated { get; }
+
 
         public AkkaProvider(ActorSystem actorSystem)
         {
@@ -26,11 +27,11 @@ namespace Portal.Infrastructure.Messaging
                    ClusterSingletonProxySettings.Create(actorSystem)),
                "url-created-proxy");
 
-            //UrlResolver = actorSystem.ActorOf(
-            //   ClusterSingletonProxy.Props(
-            //       "/user/url-resolver-singleton",
-            //       ClusterSingletonProxySettings.Create(actorSystem)),
-            //   "url-resolver-proxy");
+            UrlMapping = actorSystem.ActorOf(
+               ClusterSingletonProxy.Props(
+                   "/user/url-mapping-singleton",
+                   ClusterSingletonProxySettings.Create(actorSystem)),
+               "url-mapping-proxy");
 
 
 

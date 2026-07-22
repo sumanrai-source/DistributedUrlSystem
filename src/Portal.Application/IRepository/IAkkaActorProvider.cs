@@ -11,6 +11,7 @@ namespace Portal.Application.IRepository
         IActorRef UrlCreated { get; }
         //IActorRef UrlResolver { get; }
         IActorRef SlugResolver { get; }
+        IActorRef UrlMapping { get; }
 
         void Publish(UrlCreatedEvent createdEvents);
     }

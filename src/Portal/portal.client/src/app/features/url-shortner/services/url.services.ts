@@ -12,9 +12,18 @@ export class UrlMappingsService {
 
   constructor(private http: HttpClient) {}
 
-  getUrlMappings(): Observable<ApiResponse<UrlMapping[]>> {
-    return this.http.get<ApiResponse<UrlMapping[]>>(this.baseUrl);
-  }
+
+      getSlugMappings(): Observable<UrlMapping[]> {
+    return this.http.get<UrlMapping[]>(
+      `${this.baseUrl}/AllUrlMapping`
+    );
+}
+
+
+//   getUrlMappings(): Observable<ApiResponse<UrlMapping[]>> {
+//     return this.http.get<ApiResponse<UrlMapping[]>>(this.baseUrl)/AllUrlMapping;
+//   }
+
 
   getUrlMappingById(id: string): Observable<ApiResponse<UrlMapping>> {
     return this.http.get<ApiResponse<UrlMapping>>(`${this.baseUrl}/${id}`);
