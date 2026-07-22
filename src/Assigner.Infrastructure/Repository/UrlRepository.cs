@@ -54,5 +54,15 @@ namespace Assigner.Infrastructure.Repository
                 mapping,
                 "Mapping found.");
         }
+
+        public async Task<List<UrlMapping>> GetUrlMapping(CancellationToken cancellationToken = default)
+        {
+            return await _context.UrlMappings
+                .AsNoTracking()
+                .OrderBy(x => x.CreatedAt)
+                .ToListAsync(cancellationToken);
+
+            
+        }
     }
 }

@@ -108,44 +108,6 @@ builder.Services.AddAkka("ClusterSystem", (akkaBuilder, provider) =>
     });
 
 
-    //akkaBuilder.WithActors((system, registry) =>
-    //{
-    //    var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-    //    var actor = system.ActorOf(ClusterSingletonManager.Props(
-    //    Props.Create(() => new UrlCreatedActor(scopeFactory)),
-    //    PoisonPill.Instance,
-    //    ClusterSingletonManagerSettings.Create(system)),
-    //    ActorNames.UrlCreatedSingleton);
-
-    //    registry.Register<UrlCreatedActor>(actor);
-    //});
-
-    //akkaBuilder.WithActors((system, registry) =>
-    //{
-    //    var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-    //    var actor = system.ActorOf(ClusterSingletonManager.Props(
-    //    Props.Create(() => new UrlResolverActor(scopeFactory)),
-    //    PoisonPill.Instance,
-    //    ClusterSingletonManagerSettings.Create(system)),
-    //    ActorNames.UrlResolverSingleton);
-
-    //    registry.Register<UrlResolverActor>(actor);
-    //});
-
-
-
-    //akkaBuilder.WithActors((system, registry) =>
-    //{
-    //    var scopeFactory = provider.GetRequiredService<IServiceScopeFactory>();
-    //    var actor = system.ActorOf(ClusterSingletonManager.Props(
-    //    Props.Create(() => new SlugResolverActor(scopeFactory)),
-    //    PoisonPill.Instance,
-    //    ClusterSingletonManagerSettings.Create(system)),
-    //    ActorNames.SlugResolverSingleton);
-
-    //    registry.Register<SlugResolverActor>(actor);
-    //});
-
 });
 
 var app = builder.Build();
@@ -161,19 +123,6 @@ app.Lifetime.ApplicationStarted.Register(async () =>
     await SlugSeeder.SeedAsync(context);
 });
 
-
-
-
-
-//var app = builder.Build();
-
-//using var scope = app.Services.CreateScope();
-
-//var context = scope.ServiceProvider
-//    .GetRequiredService<AssignerDbContext>();
-
-//await context.Database.MigrateAsync();
-//await SlugSeeder.SeedAsync(context);
 
 
 

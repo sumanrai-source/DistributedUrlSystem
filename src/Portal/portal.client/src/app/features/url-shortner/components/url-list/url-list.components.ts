@@ -31,7 +31,7 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 })
 export class UrlMappingListComponent implements OnInit {
 
-  displayedColumns: string[] = [ 'destinationUrl', 'actions'];
+  displayedColumns: string[] = [ 'slug','destinationUrl','createdAt', 'actions'];
   dataSource = new MatTableDataSource<UrlMapping>([]);
 
   private search$ = new BehaviorSubject<string>('');
@@ -45,23 +45,34 @@ export class UrlMappingListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dataSource.filterPredicate = (data: UrlMapping, filter: string) => {
-      const term = filter.trim().toLowerCase();
-      return (data.url ?? '').toLowerCase().includes(term);
-    };
+    this.dataSource.filterPredicate = (data: UrlMapping, filter: string): boolean => {
+        const term = filter.trim().toLowerCase();
 
-    this.refresh$.pipe(
-      switchMap(() => this.UrlMappingsService.getUrlMappings()),
-      map(res => res?.data ?? [])
-    ).subscribe({
-      next: (data) => {
-        this.dataSource.data = data;
-        setTimeout(() => {
-          if (this.paginator) this.dataSource.paginator = this.paginator;
-        });
-      },
-      error: (err) => console.error('Failed to load urls', err)
-    });
+        return (
+            (data.slug ?? '').toLowerCase().includes(term) ||
+            (data.destinationUrl ?? '').toLowerCase().includes(term) ||
+            (data.createdAt
+            ? new Date(data.createdAt).toLocaleString().toLowerCase().includes(term)
+            : false)
+        );
+        };
+
+    this.refresh$
+  .pipe(
+    switchMap(() => this.UrlMappingsService.getSlugMappings())
+  )
+  .subscribe({
+    next: (data) => {
+      this.dataSource.data = data;
+
+      setTimeout(() => {
+        if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+        }
+      });
+    },
+    error: (err) => console.error('Failed to load slugs', err)
+  });
 
     this.search$.subscribe(term => {
       this.dataSource.filter = term;

@@ -6,7 +6,11 @@ using Portal.Application.Interfaces;
 using Portal.Application.IRepository;
 using Portal.Application.options;
 using Portal.Application.Portal.Command.CreateShortUrl;
+using Portal.Application.Portal.Queries.GetAvailableSlug;
+using Portal.Application.Portal.Queries.GetUrlMapping;
 using Shared.Contracts.Events;
+using Shared.Contracts.MappingUrl;
+using Shared.Contracts.SlugData;
 using System;
 using System.Collections.Generic;
 using System.Security.Policy;
@@ -20,6 +24,7 @@ namespace Portal.Application.Services
         private readonly ILogger<UrlService> _logger;
         private readonly ForwarderOptions _forwarderOptions;
         private readonly IAkkaActorProvider _akkaActorProvider;
+
 
         public UrlService(IAkkaActorProvider actorProvider,IAssignerClientServices assignerClientServices, ILogger<UrlService> logger, IOptions<ForwarderOptions> forwarderOptions)
         {
@@ -75,6 +80,37 @@ namespace Portal.Application.Services
             return ApiResponse<CreateShortUrlResponse>.SuccessResponse(
                 response,
                 "Short URL created successfully.");
+        }
+
+        public async Task<ApiResponse<List<GetUrlMappingResponse>>> GetAllUrlMappingAsync()
+        {
+            var response = await _akkaActorProvider.UrlMapping.Ask<object>(
+                new GetMappingUrl(),
+                TimeSpan.FromSeconds(5));
+
+            if (response is UrlMappingNotFound)
+            {
+                return ApiResponse<List<GetUrlMappingResponse>>.FailResponse(
+                    "No urlmapping found.");
+            }
+
+            if (response is not UrlMappingFound urlMappingResponse)
+            {
+                return ApiResponse<List<GetUrlMappingResponse>>.FailResponse(
+                    "Invalid response from slug resolver.");
+            }
+
+            var result = urlMappingResponse.UrlMappingDTOs
+                .Select(x => new GetUrlMappingResponse(
+                    x.slug,
+                    x.destinationUrl,
+                    x.createdAt
+                    ))
+                .ToList();
+
+            return ApiResponse<List<GetUrlMappingResponse>>.SuccessResponse(
+                result,
+                "UrlMapping retrieved successfully.");
         }
     }
 }

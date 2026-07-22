@@ -12,6 +12,9 @@ namespace Assigner.Application.IRepository
             string slug,
             CancellationToken cancellationToken = default);
 
+        Task<List<UrlMapping>> GetUrlMapping(
+          CancellationToken cancellationToken = default);
+
         Task<ApiResponse<bool>> AddAsync(
             UrlMapping mapping,
             CancellationToken cancellationToken = default);

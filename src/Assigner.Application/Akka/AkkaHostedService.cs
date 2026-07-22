@@ -59,9 +59,21 @@ namespace Assigner.Application.Akka
                         .WithRole("assigner")),
                 "slug-resolver");
 
+
+            var urlMapping = _actorSystem.ActorOf(
+             ClusterSingletonManager.Props(
+                 Props.Create(() =>
+                     new UrlMappingActor(_scopeFactory)),
+                 PoisonPill.Instance,
+                 ClusterSingletonManagerSettings
+                     .Create(_actorSystem)
+                     .WithRole("assigner")),
+             "url-mapping");
+
             _registry.UrlCreate = urlCreate;
             _registry.UrlResolver = actor;
             _registry.SlugResolver = slugActor;
+            _registry.UrlMapping = urlMapping;
 
             return Task.CompletedTask;
         }

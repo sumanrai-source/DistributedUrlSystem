@@ -10,5 +10,6 @@ namespace Assigner.Application.Akka
         public IActorRef? UrlCreate { get; set; }
         public IActorRef? UrlResolver { get; set; }
         public IActorRef? SlugResolver { get; set; }
+        public IActorRef? UrlMapping { get; set; }
     }
 }

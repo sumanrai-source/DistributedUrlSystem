@@ -42,8 +42,10 @@ export class UrlMappingsFormComponent implements OnInit {
   ngOnInit(): void {
 
     this.form = this.fb.group({
-        id: [''],
-        url: ['', Validators.required]
+    id: [''],
+    slug: ['', Validators.required],
+    destinationUrl: ['', Validators.required],
+    createdAt: [new Date(), Validators.required]
     });
 
   }
@@ -62,7 +64,9 @@ export class UrlMappingsFormComponent implements OnInit {
     const formValue = this.form.getRawValue();
 
     const payload = {
-      url: formValue.url?.trim(),
+        slug: formValue.slug?.trim(),
+        destinationUrl: formValue.destinationUrl?.trim(),
+        createdAt: formValue.createdAt
     };
 
     console.log('Submitting:', payload);
